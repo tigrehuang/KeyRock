@@ -130,35 +130,40 @@ impl OrderbookAggregator for OrderbookAggregatorService {
         json_str.push_str(&spread.to_string());
         json_str.push_str(", \"bids\": [");
         
-        for bid in bids {
+        for (i, bid) in bids.iter().enumerate() {
             json_str.push_str("{");
             json_str.push_str("\"exchange\": \"");
             let trimmed_string = bid.exchange.to_string();
             let trimmed_string = trimmed_string.splitn(2, '_').nth(1).unwrap_or("");
-
             json_str.push_str(trimmed_string);
-
             json_str.push_str("\", \"price\": ");
             json_str.push_str(&bid.price.to_string());
             json_str.push_str(", \"amount\": ");
             json_str.push_str(&bid.amount.to_string());
-            json_str.push_str("}, ");
+            json_str.push_str("}");
+        
+            if i < bids.len() - 1 {
+                json_str.push_str(", ");
+            }
         }
         
         json_str.push_str("], \"asks\": [");
         
-        for ask in asks {
+        for (i, ask) in asks.iter().enumerate() {
             json_str.push_str("{");
             json_str.push_str("\"exchange\": \"");
             let trimmed_string = ask.exchange.to_string();
             let trimmed_string = trimmed_string.splitn(2, '_').nth(1).unwrap_or("");
             json_str.push_str(trimmed_string);
-
             json_str.push_str("\", \"price\": ");
             json_str.push_str(&ask.price.to_string());
             json_str.push_str(", \"amount\": ");
             json_str.push_str(&ask.amount.to_string());
-            json_str.push_str("}, ");
+            json_str.push_str("}");
+        
+            if i < asks.len() - 1 {
+                json_str.push_str(", ");
+            }
         }
         
         json_str.push(']');
